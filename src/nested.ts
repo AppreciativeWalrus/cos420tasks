@@ -1,12 +1,15 @@
 import { Answer } from "./interfaces/answer";
 import { Question, QuestionType } from "./interfaces/question";
+import { makeBlankQuestion } from "./objects";
 
 /**
  * Consumes an array of questions and returns a new array with only the questions
  * that are `published`.
  */
 export function getPublishedQuestions(questions: Question[]): Question[] {
-    return [];
+    let out: Question[] = questions.filter((q: Question) => q.published);
+    
+    return out;
 }
 
 /**
@@ -15,7 +18,8 @@ export function getPublishedQuestions(questions: Question[]): Question[] {
  * `expected`, and an empty array for its `options`.
  */
 export function getNonEmptyQuestions(questions: Question[]): Question[] {
-    return [];
+    let out: Question[] = questions.filter((q: Question) => q.body.trim().length != 0 || q.expected.trim().length != 0 || q.options.length != 0);
+    return out;
 }
 
 /***
@@ -26,7 +30,9 @@ export function findQuestion(
     questions: Question[],
     id: number
 ): Question | null {
-    return null;
+    let tmp: Question[] = questions.filter((q: Question) => q.id == id);
+    if(tmp.length == 0) return null;
+    return tmp[0];
 }
 
 /**
@@ -35,7 +41,7 @@ export function findQuestion(
  * Hint: use filter
  */
 export function removeQuestion(questions: Question[], id: number): Question[] {
-    return [];
+    return questions.filter((q:Question)=> q.id != id);
 }
 
 /***
@@ -44,7 +50,8 @@ export function removeQuestion(questions: Question[], id: number): Question[] {
  * Do not modify the input array.
  */
 export function getNames(questions: Question[]): string[] {
-    return [];
+    let out: string[] = questions.map((q: Question) => q.name);
+    return out;
 }
 
 /**
@@ -53,7 +60,8 @@ export function getNames(questions: Question[]): string[] {
  * making the `text` an empty string, and using false for both `submitted` and `correct`.
  */
 export function makeAnswers(questions: Question[]): Answer[] {
-    return [];
+    let out: Answer[] = questions.map((q: Question) => ({questionId: q.id, text: "", submitted: false, correct: false}));
+    return out;
 }
 
 /***
@@ -62,7 +70,9 @@ export function makeAnswers(questions: Question[]): Answer[] {
  * Hint: as usual, do not modify the input questions array
  */
 export function publishAll(questions: Question[]): Question[] {
-    return [];
+    let out: Question[] = questions.map((q:Question) => ({...q, published: true, options: [...q.options]}));
+    
+    return out;
 }
 
 /***
@@ -77,7 +87,8 @@ export function addNewQuestion(
     name: string,
     type: QuestionType
 ): Question[] {
-    return [];
+    let out: Question[] = [...questions, makeBlankQuestion(id, name, type)];
+    return out;
 }
 
 /***
@@ -92,7 +103,8 @@ export function renameQuestionById(
     targetId: number,
     newName: string
 ): Question[] {
-    return [];
+    let out: Question[] = questions.map((q:Question)=> (q.id == targetId)?({...q, options: [...q.options], name: newName}):q);
+    return out;
 }
 
 /**
@@ -113,5 +125,8 @@ export function editOption(
     targetOptionIndex: number,
     newOption: string
 ): Question[] {
-    return [];
+    let out: Question[] = questions.map((q:Question)=> (q.id == targetId)?({...q, options: [...q.options]}):q);
+    let tmp: Question = out.filter((q: Question)=>q.id == targetId)[0];
+    tmp.options.splice((targetOptionIndex == -1)?tmp.options.length:targetOptionIndex, (targetOptionIndex == -1)?0:1, newOption);
+    return out;
 }

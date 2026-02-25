@@ -16,7 +16,7 @@ function App(): React.JSX.Element {
                 <h1>UM COS420 with React Hooks and TypeScript</h1>
             </header>
             <hr></hr>
-            {/* <DoubleHalf></DoubleHalf> */}
+            <DoubleHalf></DoubleHalf>
             <hr></hr>
             <ChooseTeam></ChooseTeam>
             <hr></hr>
